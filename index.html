@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Office Hours with Hans · coffee, your hardware project, honest feedback</title>
-<meta name="description" content="Hans Stam (20 years of Shenzhen factories, author of The Hardest Hardware Lessons) is in your city. Buy him a coffee, bring your hardware project, get blunt feedback.">
+<title>Office Hours with Hans · a coffee and a good conversation</title>
+<meta name="description" content="Hans Stam (20 years of Shenzhen factories, author of The Hardest Hardware Lessons) is in your city. Buy him a coffee and talk about anything: hardware, factories, supply chains, business models, China.">
 <style>
 :root{--bg:#f7f1e8;--card:#fffaf2;--ink:#2a1d14;--mu:#7a6553;--ac:#b5541c;--ac2:#2f6f4f;--bd:#e6d9c6}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
@@ -48,7 +48,7 @@ a{color:var(--ac)}
 <header>
 <div class="cup">☕</div>
 <h1>Office Hours with Hans</h1>
-<p class="tag">You buy the coffee. I tell you the truth about your hardware project.</p>
+<p class="tag">You buy the coffee. We talk about whatever you're working on or thinking about. I just like good conversations with good people.</p>
 </header>
 
 <section class="now" id="now">
@@ -59,9 +59,9 @@ a{color:var(--ac)}
 
 <h2>How it works</h2>
 <div class="how">
-<div><b>1.</b>Pick a city where I'll be, and tell me about your project in a few lines.</div>
+<div><b>1.</b>Pick a city where I'll be, and tell me in a line or two what you'd like to talk about.</div>
 <div><b>2.</b>If it's a fit, I'll reply with a time and a café (in Berlin: always in Schmargendorf). You buy the coffee (or lunch).</div>
-<div><b>3.</b>45–60 minutes. You talk, I ask annoying questions, you leave with blunt, practical feedback.</div>
+<div><b>3.</b>45–60 minutes of honest conversation. If you bring a project, you'll get blunt, practical feedback.</div>
 </div>
 
 <h2>Where I'll be</h2>
@@ -69,14 +69,16 @@ a{color:var(--ac)}
 <p class="note">Cities and dates change. Not in the list? Ask anyway: I'm in Stockholm most months and in Shenzhen every few months. In Berlin I only meet in Schmargendorf.</p>
 <div style="background:var(--card);border:1px dashed var(--bd);border-radius:12px;padding:12px 14px;margin-top:10px"><b>💻 Online works too</b>, on Google Meet. But I strongly prefer meeting in person: a café table and a prototype you can put in my hands beat a video call every time. Choose online only if we really can't be in the same city.</div>
 
-<h2>Good topics</h2>
+<h2>What can we talk about?</h2>
+<p style="margin-top:0">Anything, really. Some things I know a lot about:</p>
 <ul class="rules">
-<li>You have a physical product idea and want to know if it's worth your next year.</li>
-<li>You're about to spend real money: tooling, a factory, a first batch, a Kickstarter.</li>
-<li>Your factory in China says "very easy, no problem" and you don't believe them.</li>
-<li>Cost, DFM, certification, EVT/DVT/PVT, finding the right supplier, moving production to Europe.</li>
+<li><b>Hardware & factories:</b> is your product idea worth your next year, what it really costs to make, DFM, EVT/DVT/PVT, the factory that says "very easy, no problem".</li>
+<li><b>Supply chains:</b> finding and managing suppliers, sourcing, moving production to Europe.</li>
+<li><b>China:</b> 20 years of working there, Shenzhen, how business really works, what's changing.</li>
+<li><b>Business models & startups:</b> your idea, your pricing, your first customers, whatever keeps you up at night.</li>
+<li><b>Anything else</b> you think makes for a good conversation.</li>
 </ul>
-<p class="note">Not a fit: pitching me something to buy, recruiting, or "can you build this for free". I'll be honest if I can't help.</p>
+<p class="note">The only thing I'm not up for is a sales pitch. I just want to have good conversations with good people.</p>
 
 <h2>Invite me for a coffee</h2>
 <form id="f">
@@ -88,7 +90,7 @@ a{color:var(--ac)}
 <div id="formFields" style="display:grid;gap:12px">
 <label>Your name<input name="name" required autocomplete="name"></label>
 <label>Your email<input name="email" type="email" required autocomplete="email"></label>
-<label>Your project in a sentence or two<textarea name="project" required rows="3" placeholder="e.g. A GPS tracker for dogs. We have a prototype and are talking to factories."></textarea></label>
+<label>What would you like to talk about?<textarea name="project" required rows="3" placeholder="e.g. My hardware startup, sourcing from China, a business idea, or just curious about Shenzhen."></textarea></label>
 <button type="submit">☕ Invite Hans for a coffee (on me)</button>
 </div>
 <p class="note" id="placeNote">In Berlin I pick a café in Schmargendorf. Elsewhere I'll suggest one near you. I'll reply with a time.</p>
@@ -161,7 +163,7 @@ document.getElementById("f").addEventListener("submit", e => {
   const v = Object.fromEntries(new FormData(e.target));
   const online = chosen.startsWith("Online");
   const subject = online ? `Office hours (online): ${v.name}` : `Office hours: coffee in ${chosen.split(" (")[0]}: ${v.name}`;
-  const body = [`Hi Hans,`, ``, online ? `I'd like an online office hour (Google Meet).` : `I'd like to buy you a coffee in ${chosen}.`, ``, `My project:`, v.project, ``, v.name, v.email].join("\n");
+  const body = [`Hi Hans,`, ``, online ? `I'd like an online office hour (Google Meet).` : `I'd like to buy you a coffee in ${chosen}.`, ``, `What I'd like to talk about:`, v.project, ``, v.name, v.email].join("\n");
   location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   document.getElementById("done").style.display = "block";
 });
