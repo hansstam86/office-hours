@@ -77,13 +77,13 @@ a{color:var(--ac)}
 <h2>House rules</h2>
 <div class="how">
 <div><b>I.</b>Pick a city where I'll be and whisper what you'd like to talk about. A line or two will do.</div>
-<div><b>II.</b>I'll send you the time and the place. In Berlin it's always a café in Schmargendorf. You buy the coffee (or lunch).</div>
+<div><b>II.</b>I'll send you the time and the place. In Berlin I prefer a café in Schmargendorf, but I'm happy to come to you. You buy the coffee (or lunch).</div>
 <div><b>III.</b>45–60 minutes, off the record. If you bring a project, you'll get blunt, practical feedback.</div>
 </div>
 
 <h2>Where the door opens next</h2>
 <div class="trips" id="trips"></div>
-<p class="note">Cities and dates change. Not in the list? Ask anyway: I'm in Stockholm most months and in Shenzhen every few months. In Berlin I only meet in Schmargendorf.</p>
+<p class="note">Cities and dates change. Not in the list? Ask anyway: I'm in Stockholm most months and in Shenzhen every few months. In Berlin, Schmargendorf is my favourite, but anywhere in the city works.</p>
 <div class="online"><b>💻 Online works too</b>, on Google Meet. But I strongly prefer meeting in person: a café table and a prototype you can put in my hands beat a video call every time. Choose online only if we really can't be in the same city.</div>
 
 <h2>On the menu</h2>
@@ -110,7 +110,7 @@ a{color:var(--ac)}
 <label>What would you like to talk about?<textarea name="project" required rows="3" placeholder="e.g. My hardware startup, sourcing from China, a business idea, or just curious about Shenzhen."></textarea></label>
 <button type="submit">☕ Knock (coffee's on me)</button>
 </div>
-<p class="note" id="placeNote">In Berlin I pick a café in Schmargendorf. Elsewhere I'll suggest one near you. I'll reply with a time.</p>
+<p class="note" id="placeNote">In Berlin I like Schmargendorf best, but anywhere works. Elsewhere I'll suggest a place near you. I'll reply with a time.</p>
 <div class="done" id="done">Thanks! Your email app should have opened with the invite. If it didn't, email <a href="mailto:hans.stam@gmail.com">hans.stam@gmail.com</a>.</div>
 </form>
 
@@ -144,7 +144,7 @@ const home = TRIPS.find(t => t.home);
 const now = active || home;
 document.getElementById("nowCity").textContent = now.city;
 if(!active && now.area) document.getElementById("nowCity").innerHTML = now.city+'<div style="font-size:18px;font-weight:600;opacity:.85">'+now.area+'</div>';
-document.getElementById("nowWhen").textContent = active ? `${now.country} · until ${fmt(now.to)}` : `${now.country} · home base. In Berlin I only meet in Schmargendorf.`;
+document.getElementById("nowWhen").textContent = active ? `${now.country} · until ${fmt(now.to)}` : `${now.country} · home base. Schmargendorf preferred, anywhere in Berlin works.`;
 
 const upcoming = TRIPS.filter(t => t.from && d(t.to) >= today).sort((a,b)=>d(a.from)-d(b.from));
 const list = [...(active?[]:[home]), ...upcoming];
@@ -158,15 +158,15 @@ function pick(label, el){ chosen = label; document.querySelectorAll(".chip").for
   document.getElementById("placeNote").style.display = book ? "none" : "block";
   document.getElementById("bookNote").textContent = label.startsWith("Online")
     ? "Pick any free slot and choose Google Meet. I'd still rather meet in person."
-    : "Pick a free slot. We meet at a café in Schmargendorf; I'll send you the place.";
+    : "Pick a free slot. I prefer a café in Schmargendorf, but tell me if somewhere else suits you better.";
   document.getElementById("placeNote").textContent = label.startsWith("Online")
     ? "Online works, on Google Meet, but I much prefer meeting in person. I'll reply with a time."
-    : label.startsWith("Berlin") ? "In Berlin we meet at a café in Schmargendorf, I'll pick the place. I'll reply with a time."
+    : label.startsWith("Berlin") ? "In Berlin I prefer Schmargendorf, but anywhere works. I'll reply with a time."
     : "I'll suggest a café near you and reply with a time."; }
 function addChip(label, text, cls){ const c=document.createElement("span"); c.className="chip"+(cls?" "+cls:""); c.textContent=text; c.onclick=()=>pick(label,c); chips.appendChild(c); return c; }
 list.forEach((t,i) => {
   const el = document.createElement("div"); el.className="trip";
-  el.innerHTML = `<b>${t.city}${t.area?" · "+t.area:""}</b><span>${t===home?"home base · Schmargendorf only":range(t)}${t.note?"<br>"+t.note:""}</span>`;
+  el.innerHTML = `<b>${t.city}${t.area?" · "+t.area:""}</b><span>${t===home?"home base · Schmargendorf preferred":range(t)}${t.note?"<br>"+t.note:""}</span>`;
   const label = `${t.city}${t.area?" "+t.area:""} (${t===home?"home base":range(t)})`;
   const chip = addChip(label, t.city + (t===home?"":" · "+range(t)));
   if(i===0) pick(label, chip);
