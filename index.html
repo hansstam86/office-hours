@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Office Hours with Hans · coffee, your hardware project, honest feedback</title>
+<meta name="description" content="Hans Stam (20 years of Shenzhen factories, author of The Hardest Hardware Lessons) is in your city. Buy him a coffee, bring your hardware project, get blunt feedback.">
+<style>
+:root{--bg:#f7f1e8;--card:#fffaf2;--ink:#2a1d14;--mu:#7a6553;--ac:#b5541c;--ac2:#2f6f4f;--bd:#e6d9c6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 60px}
+header{text-align:center;padding:26px 0 10px}
+.cup{font-size:46px}
+h1{font-size:34px;margin:6px 0 4px;letter-spacing:-.01em}
+.tag{color:var(--mu);margin:0}
+.now{background:var(--ink);color:#fff;border-radius:16px;padding:22px;margin:24px 0;text-align:center}
+.now .k{font-size:13px;text-transform:uppercase;letter-spacing:.12em;opacity:.7}
+.now .city{font-size:40px;font-weight:800;margin:4px 0}
+.now .when{opacity:.85}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#4cd47f;margin-right:6px;animation:p 1.6s infinite}@keyframes p{50%{opacity:.3}}
+h2{font-size:21px;margin:34px 0 10px}
+.trips{display:grid;gap:8px}
+.trip{display:flex;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;cursor:pointer}
+.trip:hover,.trip.sel{border-color:var(--ac)}.trip b{font-size:18px}.trip span{color:var(--mu);font-size:15px;text-align:right}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:620px){.how{grid-template-columns:1fr}}
+.how div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}.how b{display:block;color:var(--ac);font-size:22px}
+ul.rules{padding-left:20px}ul.rules li{margin:4px 0}
+form{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;display:grid;gap:12px}
+label{font-size:14px;font-weight:600;display:grid;gap:4px}
+input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+textarea{min-height:110px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:620px){.row{grid-template-columns:1fr}}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:15px}.chk input{width:auto;margin-top:4px}
+button{font:inherit;font-weight:700;background:var(--ac);color:#fff;border:0;border-radius:12px;padding:14px;font-size:18px;cursor:pointer}button:hover{filter:brightness(1.08)}
+.note{color:var(--mu);font-size:14px}
+.about{display:flex;gap:16px;align-items:flex-start}.about .av{flex:none;width:72px;height:72px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-size:30px;font-weight:800}
+.done{display:none;background:#e7f4ec;border:1px solid #b9dcc6;border-radius:12px;padding:14px}
+footer{color:var(--mu);font-size:13px;text-align:center;margin-top:40px}
+a{color:var(--ac)}
+</style>
+</head>
+<body><div class="wrap">
+
+<header>
+<div class="cup">☕</div>
+<h1>Office Hours with Hans</h1>
+<p class="tag">You buy the coffee. I tell you the truth about your hardware project.</p>
+</header>
+
+<section class="now" id="now">
+<div class="k"><span class="dot"></span>Right now I'm in</div>
+<div class="city" id="nowCity">…</div>
+<div class="when" id="nowWhen"></div>
+</section>
+
+<h2>How it works</h2>
+<div class="how">
+<div><b>1.</b>Pick a city where I'll be, and tell me about your project in a few lines.</div>
+<div><b>2.</b>If it's a fit, I'll pick a time and we'll meet at a café near you. You buy the coffee (or lunch).</div>
+<div><b>3.</b>45–60 minutes. You talk, I ask annoying questions, you leave with blunt, practical feedback.</div>
+</div>
+
+<h2>Where I'll be</h2>
+<div class="trips" id="trips"></div>
+<p class="note">Cities and dates change. Not in the list? Ask anyway: I'm in Stockholm most months and in Shenzhen every few months. In Berlin I only meet in Schmargendorf.</p>
+<div style="background:var(--card);border:1px dashed var(--bd);border-radius:12px;padding:12px 14px;margin-top:10px"><b>💻 Online works too</b>, on Google Meet. But I strongly prefer meeting in person: a café table and a prototype you can put in my hands beat a video call every time. Choose online only if we really can't be in the same city.</div>
+
+<h2>Good topics</h2>
+<ul class="rules">
+<li>You have a physical product idea and want to know if it's worth your next year.</li>
+<li>You're about to spend real money: tooling, a factory, a first batch, a Kickstarter.</li>
+<li>Your factory in China says "very easy, no problem" and you don't believe them.</li>
+<li>Cost, DFM, certification, EVT/DVT/PVT, finding the right supplier, moving production to Europe.</li>
+</ul>
+<p class="note">Not a fit: pitching me something to buy, recruiting, or "can you build this for free". I'll be honest if I can't help.</p>
+
+<h2>Invite me for a coffee</h2>
+<form id="f">
+<div class="row">
+<label>Your name<input name="name" required></label>
+<label>Email<input name="email" type="email" required></label>
+</div>
+<div class="row">
+<label>City<select name="city" id="citySel" required></select></label>
+<label>Coffee or lunch?<select name="what"><option>Coffee</option><option>Lunch</option><option>Either</option></select></label>
+</div>
+<div class="row">
+<label>How?<select name="format"><option>In person at a café (preferred)</option><option>Online (Google Meet)</option></select></label>
+<label>Bring a prototype?<select name="proto"><option>Yes, I'll bring it</option><option>No prototype yet</option></select></label>
+</div>
+<label>Your project, in 2–4 sentences<textarea name="project" required placeholder="What is it, who is it for, how far are you (idea / prototype / talking to factories / shipping)?"></textarea></label>
+<label>What do you want feedback on?<input name="ask" placeholder="e.g. our unit cost, choosing a factory, is this worth doing at all"></label>
+<div class="row">
+<label>Days / times that work<input name="times" placeholder="e.g. Tue or Wed, mornings"></label>
+<label>Café you'd suggest (optional)<input name="cafe" placeholder="name or area"></label>
+</div>
+<label>Website or LinkedIn (optional)<input name="link"></label>
+<label class="chk"><input type="checkbox" name="buy" required> I'll buy the coffee (or lunch). ☕ <span class="note">(Online? Then buy yourself one and tell me what it was.)</span></label>
+<button type="submit">Send the invite</button>
+<p class="note">This opens your email app with everything filled in. I read every one and reply if I can make it. No sales follow-ups, no newsletter.</p>
+<div class="done" id="done">Thanks! Your email app should have opened with the invite. If it didn't, email me at <a href="mailto:hans.stam@gmail.com">hans.stam@gmail.com</a> with the same info.</div>
+</form>
+
+<h2>Who am I?</h2>
+<div class="about"><div class="av">H</div><div>
+<p style="margin-top:0">Hans Stam. 20 years of building hardware in Shenzhen factories: NPI, production lines, suppliers, everything that goes wrong between a prototype and 100,000 units. Author of <a href="https://thehardesthardwarelessons.com">The Hardest Hardware Lessons</a> and The Hardest Factory Lessons. Based in Berlin, often in Stockholm and Shenzhen.</p>
+<p>I do these because I learned most of what I know from people who took an hour to tell me where I was wrong.</p>
+</div></div>
+
+<footer>Office Hours with Hans · I only share the city I'm in, never more · Meetings are in public cafés</footer>
+</div>
+
+<script>
+// ===== Edit this list: where Hans will be =====
+// from/to are dates (YYYY-MM-DD). home:true = default city when no trip is active.
+const TRIPS = [
+  {city:"Berlin", area:"Schmargendorf", country:"Germany", home:true},
+  {city:"Munich",    country:"Germany", from:"2026-11-09", to:"2026-11-11"},
+  {city:"Stockholm", country:"Sweden",  from:"2026-11-11", to:"2026-11-13"},
+  {city:"Shenzhen",  country:"China",   from:"2026-12-07", to:"2026-12-13", note:"Shenzhen Maker Faire week"},
+];
+const EMAIL = "hans.stam@gmail.com";
+// ==============================================
+
+const d = s => new Date(s+"T00:00:00");
+const today = new Date(); today.setHours(0,0,0,0);
+const fmt = s => d(s).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+const range = t => t.from ? (t.from===t.to ? fmt(t.from) : fmt(t.from)+" – "+fmt(t.to)) : "most of the time";
+const active = TRIPS.find(t => t.from && d(t.from)<=today && today<=d(t.to));
+const home = TRIPS.find(t => t.home);
+const now = active || home;
+document.getElementById("nowCity").textContent = now.city;
+if(!active && now.area) document.getElementById("nowCity").innerHTML = now.city+'<div style="font-size:18px;font-weight:600;opacity:.85">'+now.area+'</div>';
+document.getElementById("nowWhen").textContent = active ? `${now.country} · until ${fmt(now.to)}` : `${now.country} · home base. In Berlin I only meet in Schmargendorf.`;
+
+const upcoming = TRIPS.filter(t => t.from && d(t.to) >= today).sort((a,b)=>d(a.from)-d(b.from));
+const list = [...(active?[]:[home]), ...upcoming];
+const box = document.getElementById("trips"), sel = document.getElementById("citySel");
+list.forEach((t,i) => {
+  const el = document.createElement("div"); el.className="trip";
+  el.innerHTML = `<b>${t.city}${t.area?" · "+t.area:""}</b><span>${t===home?"home base · Schmargendorf only":range(t)}${t.note?"<br>"+t.note:""}</span>`;
+  const label = `${t.city}${t.area?" "+t.area:""} (${t===home?"home base":range(t)})`;
+  el.onclick = () => { sel.value = label; document.querySelectorAll(".trip").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); document.getElementById("f").scrollIntoView({behavior:"smooth"}); };
+  box.appendChild(el);
+  const o = document.createElement("option"); o.textContent = label; sel.appendChild(o);
+});
+const other = document.createElement("option"); other.textContent = "Somewhere else (tell me where)"; sel.appendChild(other);
+const onl = document.createElement("option"); onl.textContent = "Online (Google Meet)"; sel.appendChild(onl);
+const fmtSel=document.querySelector("[name=format]"); fmtSel.addEventListener("change",()=>{ if(fmtSel.value.startsWith("Online")) sel.value=onl.textContent; });
+sel.addEventListener("change",()=>{ fmtSel.value = sel.value.startsWith("Online") ? fmtSel.options[1].value : fmtSel.options[0].value; });
+
+document.getElementById("f").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = Object.fromEntries(new FormData(e.target));
+  const subject = v.format.startsWith("Online") ? `Office hours (online) – ${v.name}` : `Office hours: coffee in ${v.city.split(" (")[0]} – ${v.name}`;
+  const body = [
+    `Hi Hans,`, ``,
+    `I'd like to invite you for a ${v.what.toLowerCase()} (on me).`, ``,
+    `City: ${v.city}`, `Format: ${v.format}`, `Prototype: ${v.proto}`, `When: ${v.times||"-"}`, `Café: ${v.cafe||"-"}`, ``,
+    `My project:`, v.project, ``,
+    `What I want feedback on: ${v.ask||"-"}`, `Link: ${v.link||"-"}`, ``,
+    `${v.name}`, `${v.email}`
+  ].join("\n");
+  location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  document.getElementById("done").style.display = "block";
+});
+</script>
+</body>
+</html>
