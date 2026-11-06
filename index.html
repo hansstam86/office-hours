@@ -81,10 +81,16 @@ a{color:var(--ac)}
 <h2>Invite me for a coffee</h2>
 <form id="f">
 <label>Where?<div class="chips" id="cityChips"></div></label>
+<div id="bookBox" style="display:none;text-align:center">
+<a id="bookBtn" href="https://calendar.app.google/XfEsa4kis6Q9N8wt9" target="_blank" rel="noopener" style="display:block;background:var(--ac);color:#fff;text-decoration:none;font-weight:700;font-size:18px;border-radius:12px;padding:14px">📅 Pick a time in my calendar</a>
+<p class="note" id="bookNote" style="margin:8px 0 0">You'll see my free slots and get a confirmation straight away.</p>
+</div>
+<div id="formFields" style="display:grid;gap:12px">
 <label>Your name<input name="name" required autocomplete="name"></label>
 <label>Your email<input name="email" type="email" required autocomplete="email"></label>
 <label>Your project in a sentence or two<textarea name="project" required rows="3" placeholder="e.g. A GPS tracker for dogs. We have a prototype and are talking to factories."></textarea></label>
 <button type="submit">☕ Invite Hans for a coffee (on me)</button>
+</div>
 <p class="note" id="placeNote">In Berlin I pick a café in Schmargendorf. Elsewhere I'll suggest one near you. I'll reply with a time.</p>
 <div class="done" id="done">Thanks! Your email app should have opened with the invite. If it didn't, email <a href="mailto:hans.stam@gmail.com">hans.stam@gmail.com</a>.</div>
 </form>
@@ -126,6 +132,14 @@ const list = [...(active?[]:[home]), ...upcoming];
 const box = document.getElementById("trips"), chips = document.getElementById("cityChips");
 let chosen = null;
 function pick(label, el){ chosen = label; document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on", c===el));
+  const book = label.startsWith("Berlin") || label.startsWith("Online");
+  document.getElementById("bookBox").style.display = book ? "block" : "none";
+  const ff = document.getElementById("formFields"); ff.style.display = book ? "none" : "grid";
+  ff.querySelectorAll("input,textarea").forEach(i => i.required = !book);
+  document.getElementById("placeNote").style.display = book ? "none" : "block";
+  document.getElementById("bookNote").textContent = label.startsWith("Online")
+    ? "Pick any free slot and choose Google Meet. I'd still rather meet in person."
+    : "Pick a free slot. We meet at a café in Schmargendorf; I'll send you the place.";
   document.getElementById("placeNote").textContent = label.startsWith("Online")
     ? "Online works, on Google Meet, but I much prefer meeting in person. I'll reply with a time."
     : label.startsWith("Berlin") ? "In Berlin we meet at a café in Schmargendorf, I'll pick the place. I'll reply with a time."
