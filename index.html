@@ -37,6 +37,10 @@ button{font:inherit;font-weight:700;background:var(--ac);color:#fff;border:0;bor
 .done{display:none;background:#e7f4ec;border:1px solid #b9dcc6;border-radius:12px;padding:14px}
 footer{color:var(--mu);font-size:13px;text-align:center;margin-top:40px}
 a{color:var(--ac)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.chip{border:1px solid var(--bd);background:#fff;border-radius:999px;padding:8px 14px;font-size:15px;font-weight:500;cursor:pointer;user-select:none}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.online{border-style:dashed}
 </style>
 </head>
 <body><div class="wrap">
@@ -56,7 +60,7 @@ a{color:var(--ac)}
 <h2>How it works</h2>
 <div class="how">
 <div><b>1.</b>Pick a city where I'll be, and tell me about your project in a few lines.</div>
-<div><b>2.</b>If it's a fit, I'll pick a time and we'll meet at a café near you. You buy the coffee (or lunch).</div>
+<div><b>2.</b>If it's a fit, I'll reply with a time and a café (in Berlin: always in Schmargendorf). You buy the coffee (or lunch).</div>
 <div><b>3.</b>45–60 minutes. You talk, I ask annoying questions, you leave with blunt, practical feedback.</div>
 </div>
 
@@ -76,29 +80,13 @@ a{color:var(--ac)}
 
 <h2>Invite me for a coffee</h2>
 <form id="f">
-<div class="row">
-<label>Your name<input name="name" required></label>
-<label>Email<input name="email" type="email" required></label>
-</div>
-<div class="row">
-<label>City<select name="city" id="citySel" required></select></label>
-<label>Coffee or lunch?<select name="what"><option>Coffee</option><option>Lunch</option><option>Either</option></select></label>
-</div>
-<div class="row">
-<label>How?<select name="format"><option>In person at a café (preferred)</option><option>Online (Google Meet)</option></select></label>
-<label>Bring a prototype?<select name="proto"><option>Yes, I'll bring it</option><option>No prototype yet</option></select></label>
-</div>
-<label>Your project, in 2–4 sentences<textarea name="project" required placeholder="What is it, who is it for, how far are you (idea / prototype / talking to factories / shipping)?"></textarea></label>
-<label>What do you want feedback on?<input name="ask" placeholder="e.g. our unit cost, choosing a factory, is this worth doing at all"></label>
-<div class="row">
-<label>Days / times that work<input name="times" placeholder="e.g. Tue or Wed, mornings"></label>
-<label>Café you'd suggest (optional)<input name="cafe" placeholder="name or area"></label>
-</div>
-<label>Website or LinkedIn (optional)<input name="link"></label>
-<label class="chk"><input type="checkbox" name="buy" required> I'll buy the coffee (or lunch). ☕ <span class="note">(Online? Then buy yourself one and tell me what it was.)</span></label>
-<button type="submit">Send the invite</button>
-<p class="note">This opens your email app with everything filled in. I read every one and reply if I can make it. No sales follow-ups, no newsletter.</p>
-<div class="done" id="done">Thanks! Your email app should have opened with the invite. If it didn't, email me at <a href="mailto:hans.stam@gmail.com">hans.stam@gmail.com</a> with the same info.</div>
+<label>Where?<div class="chips" id="cityChips"></div></label>
+<label>Your name<input name="name" required autocomplete="name"></label>
+<label>Your email<input name="email" type="email" required autocomplete="email"></label>
+<label>Your project in a sentence or two<textarea name="project" required rows="3" placeholder="e.g. A GPS tracker for dogs. We have a prototype and are talking to factories."></textarea></label>
+<button type="submit">☕ Invite Hans for a coffee (on me)</button>
+<p class="note" id="placeNote">In Berlin I pick a café in Schmargendorf. Elsewhere I'll suggest one near you. I'll reply with a time.</p>
+<div class="done" id="done">Thanks! Your email app should have opened with the invite. If it didn't, email <a href="mailto:hans.stam@gmail.com">hans.stam@gmail.com</a>.</div>
 </form>
 
 <h2>Who am I?</h2>
@@ -135,32 +123,31 @@ document.getElementById("nowWhen").textContent = active ? `${now.country} · unt
 
 const upcoming = TRIPS.filter(t => t.from && d(t.to) >= today).sort((a,b)=>d(a.from)-d(b.from));
 const list = [...(active?[]:[home]), ...upcoming];
-const box = document.getElementById("trips"), sel = document.getElementById("citySel");
+const box = document.getElementById("trips"), chips = document.getElementById("cityChips");
+let chosen = null;
+function pick(label, el){ chosen = label; document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on", c===el));
+  document.getElementById("placeNote").textContent = label.startsWith("Online")
+    ? "Online works, on Google Meet, but I much prefer meeting in person. I'll reply with a time."
+    : label.startsWith("Berlin") ? "In Berlin we meet at a café in Schmargendorf, I'll pick the place. I'll reply with a time."
+    : "I'll suggest a café near you and reply with a time."; }
+function addChip(label, text, cls){ const c=document.createElement("span"); c.className="chip"+(cls?" "+cls:""); c.textContent=text; c.onclick=()=>pick(label,c); chips.appendChild(c); return c; }
 list.forEach((t,i) => {
   const el = document.createElement("div"); el.className="trip";
   el.innerHTML = `<b>${t.city}${t.area?" · "+t.area:""}</b><span>${t===home?"home base · Schmargendorf only":range(t)}${t.note?"<br>"+t.note:""}</span>`;
   const label = `${t.city}${t.area?" "+t.area:""} (${t===home?"home base":range(t)})`;
-  el.onclick = () => { sel.value = label; document.querySelectorAll(".trip").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); document.getElementById("f").scrollIntoView({behavior:"smooth"}); };
+  const chip = addChip(label, t.city + (t===home?"":" · "+range(t)));
+  if(i===0) pick(label, chip);
+  el.onclick = () => { pick(label, chip); document.getElementById("f").scrollIntoView({behavior:"smooth"}); };
   box.appendChild(el);
-  const o = document.createElement("option"); o.textContent = label; sel.appendChild(o);
 });
-const other = document.createElement("option"); other.textContent = "Somewhere else (tell me where)"; sel.appendChild(other);
-const onl = document.createElement("option"); onl.textContent = "Online (Google Meet)"; sel.appendChild(onl);
-const fmtSel=document.querySelector("[name=format]"); fmtSel.addEventListener("change",()=>{ if(fmtSel.value.startsWith("Online")) sel.value=onl.textContent; });
-sel.addEventListener("change",()=>{ fmtSel.value = sel.value.startsWith("Online") ? fmtSel.options[1].value : fmtSel.options[0].value; });
+addChip("Online (Google Meet)", "💻 Online", "online");
 
 document.getElementById("f").addEventListener("submit", e => {
   e.preventDefault();
   const v = Object.fromEntries(new FormData(e.target));
-  const subject = v.format.startsWith("Online") ? `Office hours (online) – ${v.name}` : `Office hours: coffee in ${v.city.split(" (")[0]} – ${v.name}`;
-  const body = [
-    `Hi Hans,`, ``,
-    `I'd like to invite you for a ${v.what.toLowerCase()} (on me).`, ``,
-    `City: ${v.city}`, `Format: ${v.format}`, `Prototype: ${v.proto}`, `When: ${v.times||"-"}`, `Café: ${v.cafe||"-"}`, ``,
-    `My project:`, v.project, ``,
-    `What I want feedback on: ${v.ask||"-"}`, `Link: ${v.link||"-"}`, ``,
-    `${v.name}`, `${v.email}`
-  ].join("\n");
+  const online = chosen.startsWith("Online");
+  const subject = online ? `Office hours (online): ${v.name}` : `Office hours: coffee in ${chosen.split(" (")[0]}: ${v.name}`;
+  const body = [`Hi Hans,`, ``, online ? `I'd like an online office hour (Google Meet).` : `I'd like to buy you a coffee in ${chosen}.`, ``, `My project:`, v.project, ``, v.name, v.email].join("\n");
   location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   document.getElementById("done").style.display = "block";
 });
