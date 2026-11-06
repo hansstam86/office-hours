@@ -56,6 +56,7 @@ a{color:var(--ac)}
 .chip:hover{border-color:var(--ac)}
 .chip.on{background:var(--ac);color:#1a1208;border-color:var(--ac);box-shadow:0 0 14px rgba(201,162,75,.4)}
 .chip.online{border-style:dashed}
+.chk{display:flex;gap:10px;align-items:flex-start}.chk input{width:auto;margin-top:5px}
 </style>
 </head>
 <body><div class="wrap">
@@ -97,8 +98,15 @@ a{color:var(--ac)}
 </ul>
 <p class="note">Not on the menu: sales pitches. Everything else is fair game.</p>
 
+<h2>After hours <span style="font-size:15px;vertical-align:middle;border:1px solid var(--ac2);color:#e0736b;padding:2px 8px;letter-spacing:.15em">18+</span></h2>
+<div class="online" style="border-color:var(--ac2);border-style:solid;text-align:center">
+<p style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:22px;color:var(--ac)">🥃 Buy me a whiskey, hear the real war stories.</p>
+<p style="margin:0;color:var(--mu);font-style:italic">The coffee version gets you advice. The whiskey version gets you the stories that didn't make it into the books: twenty years of factories, deals and disasters, told off the record. Evenings only, in a bar, adults only. What's said over whiskey stays over whiskey.</p>
+</div>
+
 <h2>Knock on the door</h2>
 <form id="f">
+<label>Your poison<div class="chips" id="drinkChips"><span class="chip on" data-d="coffee">☕ Coffee · daytime</span><span class="chip" data-d="whiskey">🥃 Whiskey · after hours (18+)</span></div></label>
 <label>Where?<div class="chips" id="cityChips"></div></label>
 <div id="bookBox" style="display:none;text-align:center">
 <a id="bookBtn" href="https://calendar.app.google/XfEsa4kis6Q9N8wt9" target="_blank" rel="noopener" style="display:block;background:var(--ac);color:#fff;text-decoration:none;font-weight:700;font-size:18px;border-radius:12px;padding:14px">🔑 Reserve a table</a>
@@ -109,7 +117,8 @@ a{color:var(--ac)}
 <label>Your name<input name="name" required autocomplete="name"></label>
 <label>Your email<input name="email" type="email" required autocomplete="email"></label>
 <label>What would you like to talk about?<textarea name="project" required rows="3" placeholder="e.g. My hardware startup, sourcing from China, a business idea, or just curious about Shenzhen."></textarea></label>
-<button type="submit">☕ Knock: you buy Hans a coffee</button>
+<label class="chk" id="ageRow" style="display:none;text-transform:none;letter-spacing:0;font-size:15px;color:var(--ink)"><input type="checkbox" id="age"> I'm 18 or older (and of legal drinking age where we meet).</label>
+<button type="submit" id="goBtn">☕ Knock: you buy Hans a coffee</button>
 </div>
 <p class="note" id="placeNote">In Berlin I like Schmargendorf best, but anywhere works. Elsewhere I'll suggest a place near you. I'll reply with a time.</p>
 <div class="done" id="done">Thanks! Your email app should have opened with the invite. If it didn't, email <a href="mailto:hans.stam@gmail.com">hans.stam@gmail.com</a>.</div>
@@ -150,9 +159,20 @@ document.getElementById("nowWhen").textContent = active ? `${now.country} · unt
 const upcoming = TRIPS.filter(t => t.from && d(t.to) >= today).sort((a,b)=>d(a.from)-d(b.from));
 const list = [...(active?[]:[home]), ...upcoming];
 const box = document.getElementById("trips"), chips = document.getElementById("cityChips");
-let chosen = null;
-function pick(label, el){ chosen = label; document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on", c===el));
-  const book = label.startsWith("Berlin") || label.startsWith("Online");
+let chosen = null, drink = "coffee";
+document.querySelectorAll("#drinkChips .chip").forEach(c => c.onclick = () => {
+  drink = c.dataset.d; document.querySelectorAll("#drinkChips .chip").forEach(x => x.classList.toggle("on", x===c));
+  const cur = [...document.querySelectorAll("#cityChips .chip")].find(x=>x.classList.contains("on")); pick(chosen, cur);
+});
+function pick(label, el){ chosen = label; document.querySelectorAll("#cityChips .chip").forEach(c=>c.classList.toggle("on", c===el));
+  const whisky = drink === "whiskey";
+  const onl = [...document.querySelectorAll("#cityChips .chip")].find(x=>x.textContent.includes("Online"));
+  if (onl) onl.style.display = whisky ? "none" : "";
+  if (whisky && label.startsWith("Online")) { const first = document.querySelector("#cityChips .chip"); return pick(first.dataset.label, first); }
+  const book = !whisky && (label.startsWith("Berlin") || label.startsWith("Online"));
+  document.getElementById("ageRow").style.display = whisky ? "flex" : "none";
+  document.getElementById("age").required = whisky;
+  document.getElementById("goBtn").textContent = whisky ? "🥃 Knock: you buy Hans a whiskey" : "☕ Knock: you buy Hans a coffee";
   document.getElementById("bookBox").style.display = book ? "block" : "none";
   const ff = document.getElementById("formFields"); ff.style.display = book ? "none" : "grid";
   ff.querySelectorAll("input,textarea").forEach(i => i.required = !book);
@@ -160,11 +180,11 @@ function pick(label, el){ chosen = label; document.querySelectorAll(".chip").for
   document.getElementById("bookNote").textContent = label.startsWith("Online")
     ? "Pick any free slot and choose Google Meet. I'd still rather meet in person."
     : "Pick a free slot. I prefer a café in Schmargendorf, but tell me if somewhere else suits you better.";
-  document.getElementById("placeNote").textContent = label.startsWith("Online")
+  document.getElementById("placeNote").textContent = whisky ? "Evenings only. I'll suggest a bar (in Berlin, Schmargendorf preferred) and reply with a date. You're buying." : label.startsWith("Online")
     ? "Online works, on Google Meet, but I much prefer meeting in person. I'll reply with a time."
     : label.startsWith("Berlin") ? "In Berlin I prefer Schmargendorf, but anywhere works. I'll reply with a time."
     : "I'll suggest a café near you and reply with a time."; }
-function addChip(label, text, cls){ const c=document.createElement("span"); c.className="chip"+(cls?" "+cls:""); c.textContent=text; c.onclick=()=>pick(label,c); chips.appendChild(c); return c; }
+function addChip(label, text, cls){ const c=document.createElement("span"); c.className="chip"+(cls?" "+cls:""); c.textContent=text; c.dataset.label=label; c.onclick=()=>pick(label,c); chips.appendChild(c); return c; }
 list.forEach((t,i) => {
   const el = document.createElement("div"); el.className="trip";
   el.innerHTML = `<b>${t.city}${t.area?" · "+t.area:""}</b><span>${t===home?"home base · Schmargendorf preferred":range(t)}${t.note?"<br>"+t.note:""}</span>`;
@@ -180,8 +200,8 @@ document.getElementById("f").addEventListener("submit", e => {
   e.preventDefault();
   const v = Object.fromEntries(new FormData(e.target));
   const online = chosen.startsWith("Online");
-  const subject = online ? `Office hours (online): ${v.name}` : `Office hours: coffee in ${chosen.split(" (")[0]}: ${v.name}`;
-  const body = [`Hi Hans,`, ``, online ? `I'd like an online office hour (Google Meet).` : `I'd like to buy you a coffee in ${chosen}.`, ``, `What I'd like to talk about:`, v.project, ``, v.name, v.email].join("\n");
+  const subject = drink==="whiskey" ? `Whiskey hour in ${chosen.split(" (")[0]}: ${v.name}` : online ? `Office hours (online): ${v.name}` : `Office hours: coffee in ${chosen.split(" (")[0]}: ${v.name}`;
+  const body = [`Hi Hans,`, ``, drink==="whiskey" ? `I'd like to buy you a whiskey in ${chosen} and hear the war stories. (I'm 18+.)` : online ? `I'd like an online office hour (Google Meet).` : `I'd like to buy you a coffee in ${chosen}.`, ``, `What I'd like to talk about:`, v.project, ``, v.name, v.email].join("\n");
   location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   document.getElementById("done").style.display = "block";
 });
